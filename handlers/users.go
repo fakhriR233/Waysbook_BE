@@ -80,9 +80,6 @@ func (h *handlerUser) GetUser(w http.ResponseWriter, r *http.Request) {
 	  FullName:     request.FullName,
 	  Email:    	request.Email,
 	  Password: 	request.Password,
-	  Gender: 		request.Gender,
-	  Phone: 		request.Phone,
-	  Avatar: 		request.Avatar,
 	}
   
 	data, err := h.UserRepository.CreateUser(user)
@@ -129,24 +126,6 @@ func (h *handlerUser) GetUser(w http.ResponseWriter, r *http.Request) {
 		user.Password = request.Password
 	  }else {
 		  user.Password = userDataOld.Password
-	  }
-
-	  if request.Gender != "" {
-		user.Gender = request.Gender
-	  }else {
-		  user.Gender = userDataOld.Gender
-	  }
-
-	  if request.Phone != "" {
-		user.Phone = request.Phone
-	  }else {
-		  user.Phone = userDataOld.Phone
-	  }
-
-	  if request.Avatar != "" {
-		user.Avatar = request.Avatar
-	  }else {
-		  user.Avatar = userDataOld.Avatar
 	  }
 
 	//   if request.Book != "" {
@@ -200,9 +179,6 @@ func convertResponse(u models.User) usersdto.UserResponse {
     FullName:   u.FullName,
     Email:    	u.Email,
     Password: 	u.Password,
-	Gender:		u.Gender,
-	Phone:		u.Phone,
-	Avatar:		u.Avatar,
   }
 }
 

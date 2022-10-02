@@ -7,8 +7,8 @@ type TransactionRequest struct {
 	UserID						int							`json:"user_id"`
 	User 						models.UserResponse			`json:"user"`
 	Attachment					string						`json:"attachment" form:"attachment" gorm:"type: varchar(255)"`
-	Book 						[]int                			`json:"book_id" form:"book_id" gorm:"-"`
-	BooksPurchased   			[]models.BookResponse    		`json:"booksPurchased"`
+	BookID 						[]int                			`json:"book_id" form:"book_id" gorm:"-"`
+	Books   					[]models.BookResponse    		`json:"booksPurchased"`
 	Total						int							`json:"totalPayment"`
 	Status						string						`json:"status" form:"status" gorm:"type: varchar(255)"`
 }
@@ -17,8 +17,8 @@ type TransactionUpdateRequest struct {
 	UserID						int							`json:"user_id"`
 	User 						models.UserResponse			`json:"user"`
 	Attachment					string						`json:"attachment" form:"attachment" gorm:"type: varchar(255)"`
-	Book 						[]int                			`json:"book_id" form:"book_id" gorm:"-"`
-	BooksPurchased   			[]models.BookResponse    		`json:"booksPurchased"`
+	BookID 						[]int                			`json:"book_id" form:"book_id" gorm:"-"`
+	Books   					[]models.BookResponse    		`json:"booksPurchased"`
 	Total						int							`json:"totalPayment"`
 	Status						string						`json:"status" form:"status" gorm:"type: varchar(255)"`
 }

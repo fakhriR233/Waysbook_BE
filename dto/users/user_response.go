@@ -8,7 +8,7 @@ type UserResponse struct {
 	Email    				string `json:"email" form:"email" `
 	Password 				string `json:"password" form:"password" `
 	Gender 					string `json:"gender" form:"gender" `
-	Phone 					string `json:"phone" form:"phone" `
+	Phone 					int `json:"phone" form:"phone" `
 	Avatar 					string `json:"avatar" form:"avatar" `
 	BooksPurchased 			models.BookResponse `json:"booksPurchased"`
   }

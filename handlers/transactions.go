@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/gorilla/mux"
 )
 
@@ -61,22 +62,31 @@ func (h *handlerTransaction) GetTransaction(w http.ResponseWriter, r *http.Reque
 
   func (h *handlerTransaction) CreateTransaction(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+
+	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
+	userId := int(userInfo["id"].(float64))
   
-	request := new(transactiondto.TransactionRequest)
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-	  w.WriteHeader(http.StatusBadRequest)
-	  response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
-	  json.NewEncoder(w).Encode(response)
-	  return
-	}
+	// request := new(transactiondto.TransactionRequest)
+	// if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+	//   w.WriteHeader(http.StatusBadRequest)
+	//   response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
+	//   json.NewEncoder(w).Encode(response)
+	//   return
+	// }
 
 	total, _ := strconv.Atoi(r.FormValue("totalPayment"))
-	userID, _ := strconv.Atoi(r.FormValue("userID"))
+
+	var booksID []int
+	for _, r := range r.FormValue("book_id") {
+		if int(r-'0') >= 0 {
+			booksID = append(booksID, int(r-'0'))
+		}
+	}
   
-	transaction := models.Transaction{
-		UserID:    				userID,
-		Attachment:    			request.Attachment,
-		Book:     				request.Book,
+	request := transactiondto.TransactionRequest{
+		UserID:    				userId,
+		Attachment:    			r.FormValue("attachment"),
+		BookID:     			booksID,
 		Total:    				total,
 		Status:      			"Pending",
 	}
@@ -89,6 +99,17 @@ func (h *handlerTransaction) GetTransaction(w http.ResponseWriter, r *http.Reque
 	  json.NewEncoder(w).Encode(response)
 	  return
 	}
+
+	book, _ := h.TransactionRepository.FindBooksById(booksID)
+
+	transaction := models.Transaction{
+		Attachment:    			request.Attachment,
+		Total:    				request.Total,
+		Books: 					book,				
+		UserID:    				userId,
+		Status:      			"Pending",
+	}
+
   
 	transaction, err = h.TransactionRepository.CreateTransaction(transaction)
 	if err != nil {
@@ -136,11 +157,18 @@ func (h *handlerTransaction) UpdateTransaction(w http.ResponseWriter, r *http.Re
 	}else {
 		transaction.Attachment = transactionDataOld.Attachment
 	}
+
+	var booksID []int
+	for _, r := range r.FormValue("book_id") {
+		if int(r-'0') >= 0 {
+			booksID = append(booksID, int(r-'0'))
+		}
+	}
 	  
-	if request.Book != nil {
-		transaction.Book = request.Book
+	if request.BookID != nil {
+		transaction.BookID = booksID
 		}else {
-		transaction.Book = transactionDataOld.Book
+		transaction.BookID = transactionDataOld.BookID
 	}
 
 	if request.Total != 0 {
@@ -198,7 +226,7 @@ func convertResponseTransaction(u models.Transaction) models.Transaction {
 		ID:				u.ID,
 	  User:    			u.User,
 	  Attachment:    	u.Attachment,
-	  Book:				u.Book,
+	  BookID:			u.BookID,
 	  Status:      		u.Status,
 	}
 }
@@ -208,7 +236,7 @@ func convertResponseTransactionUpdate(u models.Transaction) transactiondto.Trans
 		ID:				u.ID,
 	  User:    			u.User,
 	  Attachment:    	u.Attachment,
-	  Book:				u.Book,
+	  BookID:			u.BookID,
 	  Status:      		u.Status,
 	}
 }

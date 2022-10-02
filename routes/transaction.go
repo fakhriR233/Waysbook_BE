@@ -2,6 +2,7 @@ package routes
 
 import (
 	"_waysbook/handlers"
+	"_waysbook/pkg/middleware"
 	"_waysbook/pkg/mysql"
 	"_waysbook/repositories"
 
@@ -14,7 +15,7 @@ func TransactionRoutes(r *mux.Router) {
 
   r.HandleFunc("/transactions", h.FindTransactions).Methods("GET")
   r.HandleFunc("/transaction/{id}", h.GetTransaction).Methods("GET")
-  r.HandleFunc("/transaction", h.CreateTransaction).Methods("POST")
+  r.HandleFunc("/transaction", middleware.Auth(h.CreateTransaction)).Methods("POST")
   r.HandleFunc("/transaction/{id}", h.UpdateTransaction).Methods("PATCH")
   r.HandleFunc("/transaction/{id}", h.DeleteTransaction).Methods("DELETE")
 }
