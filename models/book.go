@@ -20,7 +20,7 @@ type Book struct {
 type BookResponse struct {
   ID        					int       					`json:"id"`
   Title      					string						`json:"title"`
-  PublicationDate      			string    					`json:"publicationDate"`
+  PublicationDate     string    					`json:"publicationDate"`
   Pages     					int    						`json:"pages"`
   ISBN     						int    						`json:"ISBN"`
   Author						string						`json:"author"`

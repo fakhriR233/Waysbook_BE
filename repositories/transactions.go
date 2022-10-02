@@ -21,7 +21,7 @@ func RepositoryTransaction(db *gorm.DB) *repository {
 
 func (r *repository) FindTransactions() ([]models.Transaction, error) {
 	var transactions []models.Transaction
-	err := r.db.Preload("User").Preload("Profile").Preload("Book").Find(&transactions).Error
+	err := r.db.Preload("User").Preload("Books").Find(&transactions).Error
 
 	return transactions, err
 }
@@ -36,19 +36,19 @@ func (r *repository) FindBooksById(BookID []int) ([]models.Book, error) {
 func (r *repository) GetTransaction(ID int) (models.Transaction, error) {
 var transaction models.Transaction
 // not yet using category relation, cause this step doesnt Belong to Many
-err := r.db.Preload("User").Preload("Profile").Preload("Book").First(&transaction, ID).Error
+err := r.db.Preload("User").Preload("Profile").Preload("Books").First(&transaction, ID).Error
 
 return transaction, err
 }
 
 func (r *repository) CreateTransaction(transaction models.Transaction) (models.Transaction, error) {
-	err := r.db.Preload("User").Preload("Profile").Preload("Book").Create(&transaction).Error
+	err := r.db.Preload("User").Preload("Profile").Preload("Books").Create(&transaction).Error
 
 	return transaction, err
 }
 
 func (r *repository) UpdateTransaction(transaction models.Transaction, ID int) (models.Transaction, error) {
-	err := r.db.Preload("User").Preload("Book").Raw("UPDATE transactions SET user_id=?, attachment=?, book_id=?, total_payment=?, status=? WHERE id=?", transaction.UserID, transaction.Attachment, transaction.BookID,transaction.Total, transaction.Status,ID).Scan(&transaction).Error
+	err := r.db.Preload("User").Preload("Books").Raw("UPDATE transactions SET user_id=?, attachment=?, book_id=?, total_payment=?, status=? WHERE id=?", transaction.UserID, transaction.Attachment, transaction.BookID,transaction.Total, transaction.Status,ID).Scan(&transaction).Error
 
 	return transaction, err
 }

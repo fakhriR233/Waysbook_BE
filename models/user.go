@@ -10,13 +10,13 @@ type User struct {
   Password 	  	string						`json:"password" gorm:"type: varchar(255)"`
   Status 	  	string						`json:"status" gorm:"type: varchar(50)"`
   Profile     ProfileResponse   `json:"profile"`
-  Transaction []TransactionResponse `json:"transaction"`
+  Transaction []TransactionResponse   `json:"transaction"`
   CreatedAt 	time.Time					`json:"created_at"`
   UpdatedAt 	time.Time					`json:"updated_at"`
 }
 
 type UserResponse struct {
-	ID          	int			`json:"id"`
+	ID          	int			  `json:"id"`
 	FullName 		  string		`json:"fullname" gorm:"type: varchar(255)"`
 	Email		      string 		`json:"email" gorm:"type: varchar(255)"`
   }
